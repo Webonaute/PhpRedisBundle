@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+
+<container
+    xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services
+    http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="WebonautePhpredisBundle\Session\Storage\Handler\RedisSessionHandler">
+            <argument type="service" id="webonaute_phpredis.session.client" />
+            <argument>%session.storage.options%</argument>
+            <argument>%webonaute_phpredis.session.prefix%</argument>
+            <argument>%webonaute_phpredis.session.locking%</argument>
+            <argument>%webonaute_phpredis.session.spin_lock_wait%</argument>
+        </service>
+    </services>
+
+</container>

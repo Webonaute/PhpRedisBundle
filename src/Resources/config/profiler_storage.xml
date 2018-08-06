@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+
+<container
+    xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services
+    http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="profiler.storage" alias="WebonautePhpredisBundle\Profiler\Storage\RedisProfilerStorage"/>
+        <service id="WebonautePhpredisBundle\Profiler\Storage\RedisProfilerStorage">
+            <argument type="service" id="webonaute_phpredis.profiler_storage.client" />
+            <argument>%webonaute_phpredis.profiler_storage.ttl%</argument>
+        </service>
+    </services>
+
+</container>

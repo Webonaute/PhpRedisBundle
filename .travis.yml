@@ -1,0 +1,29 @@
+language: php
+
+services:
+  - redis-server
+
+php:
+  - 7.2
+  - 7.1
+  - 7.0
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+env:
+  global:
+    - SYMFONY_DEPRECATIONS_HELPER="weak"
+
+before_install:
+  - phpenv config-rm xdebug.ini || true
+  - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini;
+  - phpenv rehash;
+  - composer self-update
+
+install: composer install --no-interaction --no-progress
+
+before_script: mkdir Webonaute && ln -s ../ Webonaute/WebonautePhpredisBundle

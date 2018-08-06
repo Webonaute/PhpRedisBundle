@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+
+<container
+    xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services
+    http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="WebonautePhpredisBundle\Command\RedisFlushallCommand">
+            <tag name="console.command" command="redis:flushall"/>
+        </service>
+
+        <service id="WebonautePhpredisBundle\Command\RedisFlushdbCommand">
+            <tag name="console.command" command="redis:flushdb"/>
+        </service>
+
+        <service id="webonaute_phpredis.logger" class="%webonaute_phpredis.logger.class%">
+            <tag name="monolog.logger" channel="webonaute_phpredis" />
+            <argument type="service" id="logger" on-invalid="null" />
+        </service>
+
+        <service id="webonaute_phpredis.data_collector" class="%webonaute_phpredis.data_collector.class%" public="false">
+            <tag name="data_collector" template="@SncRedis/Collector/redis.html.twig" id="redis" />
+            <argument type="service" id="webonaute_phpredis.logger" />
+        </service>
+    </services>
+
+</container>
