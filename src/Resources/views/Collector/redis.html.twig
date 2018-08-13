@@ -81,7 +81,7 @@
     </span>
 {% else %}
     <span class="label {{ collector.commandcount == 0 ? 'disabled' }}">
-        <span class="icon">{{ include('@SncRedis/Collector/icon.svg.twig', {colors: {light: '#DDD', dark: '#999'}}) }}</span>
+        <span class="icon">{{ include('@WebonautePhpredisBundle:Collector:icon.svg.twig', {colors: {light: '#DDD', dark: '#999'}}) }}</span>
         <strong>Redis</strong>
         {% if 0 != collector.erroredCommandsCount %}
             <span class="count">
