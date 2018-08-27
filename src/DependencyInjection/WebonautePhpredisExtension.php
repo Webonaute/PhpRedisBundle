@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use WebonautePhpredisBundle\DependencyInjection\Configuration\Configuration;
 use WebonautePhpredisBundle\DependencyInjection\Configuration\RedisDsn;
 use WebonautePhpredisBundle\Session\Storage\Handler\RedisSessionHandler;
+use WebonautePhpredisBundle\Pool\Pool;
 
 //use WebonautePhpredisBundle\DependencyInjection\Configuration\RedisEnvDsn;
 
@@ -177,6 +178,8 @@ class WebonautePhpredisExtension extends Extension
 
         $container->setAlias(sprintf('webonaute_phpredis.%s', $client['alias']), $phpredisId);
         $container->setAlias(sprintf('webonaute_phpredis.%s_client', $client['alias']), $phpredisId);
+
+        $container->getDefinition(Pool::class)->addMethodCall('set', [$client['alias'], new Reference($phpredisId)]);
     }
 
     /**
@@ -247,6 +250,8 @@ class WebonautePhpredisExtension extends Extension
 
         $container->setAlias(sprintf('webonaute_phpredis.%s', $client['alias']), $phpredisId);
         $container->setAlias(sprintf('webonaute_phpredis.%s_client', $client['alias']), $phpredisId);
+
+        $container->getDefinition(Pool::class)->addMethodCall('set', [$client['alias'], new Reference($phpredisId)]);
     }
 
     /**
