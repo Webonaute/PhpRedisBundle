@@ -295,6 +295,10 @@ class WebonautePhpredisExtension extends Extension
     protected function loadDoctrine(array $config, ContainerBuilder $container): void
     {
         foreach ($config['doctrine'] as $name => $cache) {
+            if ($cache['enabled'] !== true){
+                continue;
+            }
+
             if ('second_level_cache' === $name) {
                 $name = 'second_level_cache.region_cache_driver';
             }

@@ -198,6 +198,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode($type)
                 ->canBeUnset()
                 ->children()
+                ->scalarNode('enabled')->defaultFalse()->end()
                 ->scalarNode('client')->isRequired()->end()
                 ->scalarNode('namespace')->defaultNull()->end()
                 ->end()
