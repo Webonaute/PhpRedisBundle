@@ -39,7 +39,13 @@ class RedisFlushallCommand extends RedisBaseCommand
      */
     private function flushAll(): void
     {
-        $this->redisClient->flushAll();
+        if ($this->redisClient instanceof \Redis) {
+            $this->redisClient->flushAll();
+        } elseif ($this->redisClient instanceof \RedisCluster) {
+            foreach ($this->redisClient->_masters() as $node) {
+                $this->redisClient->flushAll($node);
+            }
+        }
 
         $this->output->writeln('<info>All redis databases flushed</info>');
     }

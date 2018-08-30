@@ -38,8 +38,13 @@ class RedisFlushdbCommand extends RedisBaseCommand
      */
     private function flushDbForClient(): void
     {
-        $this->redisClient->flushDB();
-
+        if ($this->redisClient instanceof \Redis) {
+            $this->redisClient->flushDB();
+        } elseif ($this->redisClient instanceof \RedisCluster) {
+            foreach ($this->redisClient->_masters() as $node) {
+                $this->redisClient->flushDB($node);
+            }
+        }
         $this->output->writeln('<info>redis database flushed</info>');
     }
 
