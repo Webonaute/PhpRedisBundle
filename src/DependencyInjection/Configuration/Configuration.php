@@ -11,6 +11,7 @@ use WebonautePhpredisBundle\Client\RedisArray;
 use WebonautePhpredisBundle\Client\RedisClient;
 use WebonautePhpredisBundle\Client\RedisCluster;
 use WebonautePhpredisBundle\DataCollector\RedisDataCollector;
+use WebonautePhpredisBundle\Doctrine\Common\Cache\RedisClusterCache;
 use WebonautePhpredisBundle\Logger\RedisLogger;
 use WebonautePhpredisBundle\SwiftMailer\RedisSpool;
 
@@ -49,6 +50,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('logger')->defaultValue(RedisLogger::class)->end()
             ->scalarNode('data_collector')->defaultValue(RedisDataCollector::class)->end()
             ->scalarNode('doctrine_cache_phpredis')->defaultValue(RedisCache::class)->end()
+            ->scalarNode('doctrine_cache_phpredis_cluster')->defaultValue(RedisClusterCache::class)->end()
             ->scalarNode('monolog_handler')->defaultValue(RedisHandler::class)->end()
             ->scalarNode('swiftmailer_spool')->defaultValue(RedisSpool::class)->end()
             ->end()

@@ -303,8 +303,13 @@ class WebonautePhpredisExtension extends Extension
                 $name = 'second_level_cache.region_cache_driver';
             }
 
-            $definitionFunction = function ($client, $cache) use ($container) {
-                $def = new Definition($container->getParameter('webonaute_phpredis.doctrine_cache_phpredis.class'));
+            $definitionFunction = function ($client, $cache, $config) use ($container) {
+                if ($config['type'] === 'cluster'){
+                    $def = new Definition($container->getParameter('webonaute_phpredis.doctrine_cache_phpredis_cluster.class'));
+                }else{
+                    $def = new Definition($container->getParameter('webonaute_phpredis.doctrine_cache_phpredis.class'));
+                }
+
                 $def->addMethodCall('setRedis', [$client]);
                 if ($cache['namespace']) {
                     $def->addMethodCall('setNamespace', [$cache['namespace']]);
@@ -315,11 +320,11 @@ class WebonautePhpredisExtension extends Extension
 
             $client = new Reference(sprintf('webonaute_phpredis.%s_client', $cache['client']));
             foreach ($cache['entity_managers'] as $em) {
-                $def = $definitionFunction($client, $cache);
+                $def = $definitionFunction($client, $cache, $config['clients'][$cache['client']]);
                 $container->setDefinition(sprintf('doctrine.orm.%s_%s', $em, $name), $def);
             }
             foreach ($cache['document_managers'] as $dm) {
-                $def = $definitionFunction($client, $cache);
+                $def = $definitionFunction($client, $cache, $config['clients'][$cache['client']]);
                 $container->setDefinition(sprintf('doctrine_mongodb.odm.%s_%s', $dm, $name), $def);
             }
         }
