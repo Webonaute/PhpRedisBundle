@@ -95,6 +95,7 @@ class Configuration implements ConfigurationInterface
             ->thenInvalid('The redis client type %s is invalid.')
             ->end()
             ->end()
+            ->scalarNode('enabled')->defaultFalse()->end()
             ->scalarNode('alias')->isRequired()->end()
             ->booleanNode('logging')->defaultValue($this->debug)->end()
             ->arrayNode('dsns')

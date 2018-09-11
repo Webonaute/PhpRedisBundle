@@ -12,8 +12,8 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use WebonautePhpredisBundle\DependencyInjection\Configuration\Configuration;
 use WebonautePhpredisBundle\DependencyInjection\Configuration\RedisDsn;
-use WebonautePhpredisBundle\Session\Storage\Handler\RedisSessionHandler;
 use WebonautePhpredisBundle\Pool\Pool;
+use WebonautePhpredisBundle\Session\Storage\Handler\RedisSessionHandler;
 
 //use WebonautePhpredisBundle\DependencyInjection\Configuration\RedisEnvDsn;
 
@@ -91,7 +91,7 @@ class WebonautePhpredisExtension extends Extension
      */
     public function getXsdValidationBasePath(): string
     {
-        return __DIR__ . '/../Resources/config/schema';
+        return __DIR__.'/../Resources/config/schema';
     }
 
     /**
@@ -102,16 +102,18 @@ class WebonautePhpredisExtension extends Extension
      */
     protected function loadClient(array $client, ContainerBuilder $container): void
     {
-        switch ($client['type']) {
-            case 'cluster':
-                $this->loadPhpredisCluster($client, $container);
-                break;
-            case 'array':
-                //$this->loadPhpredisClient($client, $container);
-                break;
-            case 'single':
-                $this->loadPhpredisClient($client, $container);
-                break;
+        if ($client['enabled'] === true) {
+            switch ($client['type']) {
+                case 'cluster':
+                    $this->loadPhpredisCluster($client, $container);
+                    break;
+                case 'array':
+                    //$this->loadPhpredisClient($client, $container);
+                    break;
+                case 'single':
+                    $this->loadPhpredisClient($client, $container);
+                    break;
+            }
         }
     }
 
@@ -138,7 +140,7 @@ class WebonautePhpredisExtension extends Extension
                 if (null !== $dsn->getSocket()) {
                     $seeds[] = $dsn->getSocket();
                 } else {
-                    $seeds[] = $dsn->getHost() . ':' . $dsn->getPort();
+                    $seeds[] = $dsn->getHost().':'.$dsn->getPort();
                 }
             }
         }
@@ -146,7 +148,7 @@ class WebonautePhpredisExtension extends Extension
         /** @var \WebonautePhpredisBundle\DependencyInjection\Configuration\RedisDsn $dsn */
         $phpredisId = sprintf('webonaute_phpredis.phpredis.%s', $client['alias']);
 
-        $phpredisDef = new Definition($container->getParameter('webonaute_phpredis.' . $client['type'] . '_client.class'));
+        $phpredisDef = new Definition($container->getParameter('webonaute_phpredis.'.$client['type'].'_client.class'));
         $phpredisDef->addArgument($client['alias']);
         $phpredisDef->addArgument($seeds);
         $phpredisDef->addArgument($client['options']['connection_timeout']);
@@ -203,7 +205,7 @@ class WebonautePhpredisExtension extends Extension
         /** @var \WebonautePhpredisBundle\DependencyInjection\Configuration\RedisDsn $dsn */
         $phpredisId = sprintf('webonaute_phpredis.phpredis.%s', $client['alias']);
 
-        $phpredisDef = new Definition($container->getParameter('webonaute_phpredis.' . $client['type'] . '_client.class'));
+        $phpredisDef = new Definition($container->getParameter('webonaute_phpredis.'.$client['type'].'_client.class'));
         if ($client['logging']) {
             $phpredisDef->addArgument(['alias' => $client['alias']]);
             $phpredisDef->addArgument(new Reference('webonaute_phpredis.logger'));
@@ -295,7 +297,7 @@ class WebonautePhpredisExtension extends Extension
     protected function loadDoctrine(array $config, ContainerBuilder $container): void
     {
         foreach ($config['doctrine'] as $name => $cache) {
-            if ($cache['enabled'] !== true){
+            if ($cache['enabled'] !== true) {
                 continue;
             }
 
@@ -304,9 +306,9 @@ class WebonautePhpredisExtension extends Extension
             }
 
             $definitionFunction = function ($client, $cache, $config) use ($container) {
-                if ($config['type'] === 'cluster'){
+                if ($config['type'] === 'cluster') {
                     $def = new Definition($container->getParameter('webonaute_phpredis.doctrine_cache_phpredis_cluster.class'));
-                }else{
+                } else {
                     $def = new Definition($container->getParameter('webonaute_phpredis.doctrine_cache_phpredis.class'));
                 }
 
